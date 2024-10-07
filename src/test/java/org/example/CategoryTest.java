@@ -26,7 +26,7 @@ public class CategoryTest {
     @DisplayName("of returns an instance")
     @Order(2)
     void canBeCreatedFromOfMethod() {
-        Category category = Category.of("Name");
+        Category category = (Category) Category.of("Name");
         assertThat(category.getName()).isEqualTo("Name");
     }
 
