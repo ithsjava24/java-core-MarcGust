@@ -5,11 +5,7 @@ import java.util.*;
 
 import static org.example.warehouse.Category.instances;
 
-/* X Skapa en instans via en getInstance-metod
-Hantera produkter (X lägga till, X uppdatera, hämta)
-Användare ska inte kunna ändra produkterna*/
 public class Warehouse {
-
     private final String name;
     private final Map<UUID, ProductRecord> products = new HashMap<>();
     private final Set<ProductRecord> changedProducts = new HashSet<>();
@@ -21,6 +17,7 @@ public class Warehouse {
     public static Warehouse getInstance(String name) {
         return instances.computeIfAbsent(name, Warehouse::new);
     }
+
     public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
         if (uuid == null) {
             uuid = UUID.randomUUID();
@@ -37,6 +34,7 @@ public class Warehouse {
         if (products.containsKey(uuid)) {
             throw new IllegalArgumentException("Product already exists");
         }
+
         ProductRecord newProduct = new ProductRecord(uuid, name, category, price);
         products.put(uuid, newProduct);
         return newProduct;
@@ -47,6 +45,7 @@ public class Warehouse {
         if (product == null) {
             throw new IllegalArgumentException("Product does not exist");
         }
+
         ProductRecord updatedProduct = new ProductRecord(product.uuid(), product.name(), product.category(), newPrice);
         products.put(uuid, updatedProduct);
         changedProducts.add(updatedProduct);
@@ -55,22 +54,17 @@ public class Warehouse {
     public boolean isEmpty() {
         return products.isEmpty();
     }
-    public boolean getProductsBy(Category meat) {
-        return false;
+
+    public List<ProductRecord> getProducts() {
+        return List.copyOf(products.values());
     }
 
-    public boolean getProducts() {
-        return false;
+    public Optional<ProductRecord> getProductById(UUID uuid) {
+        return Optional.ofNullable(products.get(uuid));
     }
 
-    public boolean getProductById(UUID uuid) {
-        return false;
-    }
-
-
-
-    public boolean getChangedProducts() {
-        return false;
+    public Set<ProductRecord> getChangedProducts() {
+        return Collections.unmodifiableSet(changedProducts);
     }
 
     public boolean getProductsGroupedByCategories() {
