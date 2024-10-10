@@ -1,7 +1,5 @@
 package org.example.warehouse;
 
-import jdk.internal.icu.text.UnicodeSet;
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -54,19 +52,16 @@ public class Warehouse {
         changedProducts.add(updatedProduct);
     }
 
-    public boolean getProductsBy(Category meat) {
-        return false;
-    }
-
     public boolean isEmpty() {
+        return products.isEmpty();
+    }
+    public boolean getProductsBy(Category meat) {
         return false;
     }
 
     public boolean getProducts() {
         return false;
     }
-
-
 
     public boolean getProductById(UUID uuid) {
         return false;
