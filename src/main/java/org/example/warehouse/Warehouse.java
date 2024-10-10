@@ -1,5 +1,7 @@
 package org.example.warehouse;
 
+import jdk.internal.icu.text.UnicodeSet;
+
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +45,16 @@ public class Warehouse {
         return newProduct;
     }
 
+    public void updateProductPrice(UUID uuid, BigDecimal newPrice) {
+        ProductRecord product = products.get(uuid);
+        if (product == null) {
+            throw new IllegalArgumentException("Product does not exist");
+        }
+        ProductRecord updatedProduct = new ProductRecord(product.uuid(), product.name(), product.category(), newPrice);
+        products.put(uuid, updatedProduct);
+        changedProducts.add(updatedProduct);
+    }
+
     public boolean getProductsBy(Category meat) {
         return false;
     }
@@ -61,8 +73,7 @@ public class Warehouse {
         return false;
     }
 
-    public void updateProductPrice(UUID uuid, BigDecimal bigDecimal) {
-    }
+
 
     public boolean getChangedProducts() {
         return false;
