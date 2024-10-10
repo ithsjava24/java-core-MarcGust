@@ -3,19 +3,18 @@ package org.example.warehouse;
 import jdk.internal.icu.text.UnicodeSet;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.example.warehouse.Category.instances;
 
 /* X Skapa en instans via en getInstance-metod
-Hantera produkter (X lägga till, uppdatera, hämta)
+Hantera produkter (X lägga till, X uppdatera, hämta)
 Användare ska inte kunna ändra produkterna*/
 public class Warehouse {
 
     private final String name;
     private final Map<UUID, ProductRecord> products = new HashMap<>();
+    private final Set<ProductRecord> changedProducts = new HashSet<>();
 
     public Warehouse(String name) {
         this.name = name;
