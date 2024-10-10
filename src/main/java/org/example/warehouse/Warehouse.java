@@ -1,16 +1,19 @@
 package org.example.warehouse;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.example.warehouse.Category.instances;
 
 /* X Skapa en instans via en getInstance-metod
-Hantera produkter (lägga till, uppdatera, hämta)
+Hantera produkter (X lägga till, uppdatera, hämta)
 Användare ska inte kunna ändra produkterna*/
 public class Warehouse {
 
     private final String name;
+    private final Map<UUID, ProductRecord> products = new HashMap<>();
 
     public Warehouse(String name) {
         this.name = name;
@@ -21,7 +24,7 @@ public class Warehouse {
     }
     public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
         if (uuid == null) {
-            throw new IllegalArgumentException("Product must have a UUID");
+            uuid = UUID.randomUUID();
         }
         if (name == null) {
             throw new IllegalArgumentException("Product must have a name");
@@ -30,10 +33,13 @@ public class Warehouse {
             throw new IllegalArgumentException("Product must have a category");
         }
         if (price == null) {
-            throw new IllegalArgumentException("Product must have a price");
+            price = BigDecimal.ZERO;
         }
-        ProductRecord productRecord = new ProductRecord(uuid, name, category, price);
-        ProductRecord newProduct = null;
+        if (products.containsKey(uuid)) {
+            throw new IllegalArgumentException("Product already exists");
+        }
+        ProductRecord newProduct = new ProductRecord(uuid, name, category, price);
+        products.put(uuid, newProduct);
         return newProduct;
     }
 
