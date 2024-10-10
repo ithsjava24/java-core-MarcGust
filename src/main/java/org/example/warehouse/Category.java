@@ -2,6 +2,7 @@ package org.example.warehouse;
 
 public class Category {
 
+    private String name;
     /*Ha en of-metod som skapar och returnerar en instans.
     Se till att namnet alltid börjar med en versal.
     Använda en singleton-struktur, där samma kategori med samma namn alltid returnerar samma instans.
@@ -15,7 +16,7 @@ public class Category {
         return null;
     }
 
-    public boolean getName() {
-        return false;
+    public String getName() {
+        return name;
     }
 }
