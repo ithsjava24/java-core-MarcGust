@@ -1,4 +1,8 @@
 package org.example.warehouse;
 
-public record ProductRecord() {
+import java.math.BigDecimal;
+import java.util.UUID;
+
+//UUID, Name, Category, Price
+public record ProductRecord(UUID uuid, String name, Category category, BigDecimal price) {
 }
