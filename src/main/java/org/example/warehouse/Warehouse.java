@@ -3,13 +3,21 @@ package org.example.warehouse;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import static org.example.warehouse.Category.instances;
+
 /*Skapa en instans via en getInstance-metod
 Hantera produkter (lägga till, uppdatera, hämta)
 Användare ska inte kunna ändra produkterna*/
 public class Warehouse {
 
-    public static Warehouse getInstance(String myStore) {
-        return null;
+    private final String name;
+
+    public Warehouse(String name) {
+        this.name = name;
+    }
+
+    public static Warehouse getInstance(String name) {
+        return instances.computeIfAbsent(name, Warehouse::new);
     }
 
     public boolean getProductsBy(Category meat) {
