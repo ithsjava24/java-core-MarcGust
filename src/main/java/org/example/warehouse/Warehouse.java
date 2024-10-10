@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import static org.example.warehouse.Category.instances;
 
-/*Skapa en instans via en getInstance-metod
+/* X Skapa en instans via en getInstance-metod
 Hantera produkter (lägga till, uppdatera, hämta)
 Användare ska inte kunna ändra produkterna*/
 public class Warehouse {
@@ -18,6 +18,23 @@ public class Warehouse {
 
     public static Warehouse getInstance(String name) {
         return instances.computeIfAbsent(name, Warehouse::new);
+    }
+    public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("Product must have a UUID");
+        }
+        if (name == null) {
+            throw new IllegalArgumentException("Product must have a name");
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("Product must have a category");
+        }
+        if (price == null) {
+            throw new IllegalArgumentException("Product must have a price");
+        }
+        ProductRecord productRecord = new ProductRecord(uuid, name, category, price);
+        ProductRecord newProduct = null;
+        return newProduct;
     }
 
     public boolean getProductsBy(Category meat) {
@@ -32,9 +49,7 @@ public class Warehouse {
         return false;
     }
 
-    public ProductRecord addProduct(UUID uuidMilk, String milk, Category dairy, BigDecimal bigDecimal) {
-        return null;
-    }
+
 
     public boolean getProductById(UUID uuid) {
         return false;
