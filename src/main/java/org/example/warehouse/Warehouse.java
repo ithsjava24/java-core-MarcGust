@@ -2,76 +2,85 @@ package org.example.warehouse;
 
 import java.math.BigDecimal;
 import java.util.*;
-
-import static org.example.warehouse.Category.instances;
+import java.util.stream.Collectors;
 
 public class Warehouse {
+    private static final Map<String, Warehouse> instances = new HashMap<>();
     private final String name;
-    private final Map<UUID, Products> products = new HashMap<>();
-    private final Set<Products> changedProducts = new HashSet<>();
+    private final List<ProductRecord> products = new ArrayList<>();
+    private final List<ProductRecord> changedProducts = new ArrayList<>();
 
-    public Warehouse(String name) {
+    // Private constructor
+    private Warehouse(String name) {
         this.name = name;
     }
 
+    // Factory method for getting an instance
     public static Warehouse getInstance(String name) {
         return instances.computeIfAbsent(name, Warehouse::new);
     }
 
-    public Products addProduct(UUID uuid, String name, Category category, BigDecimal price) {
+    // Adding a product
+    public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Product name can't be null or empty.");
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("Category can't be null.");
+        }
         if (uuid == null) {
             uuid = UUID.randomUUID();
         }
-        if (name == null) {
-            throw new IllegalArgumentException("Product must have a name");
+        // Check if product with the same id already exists
+        UUID finalUuid = uuid;
+        if (products.stream().anyMatch(p -> p.uuid().equals(finalUuid))) {
+            throw new IllegalArgumentException("Product with that id already exists, use updateProduct for updates.");
         }
-        if (category == null) {
-            throw new IllegalArgumentException("Product must have a category");
-        }
-        if (price == null) {
-            price = BigDecimal.ZERO;
-        }
-        if (products.containsKey(uuid)) {
-            throw new IllegalArgumentException("Product already exists");
-        }
-
-        Products newProduct = new Products(uuid, name, category, price);
-        products.put(uuid, newProduct);
-        return newProduct;
+        ProductRecord product = new ProductRecord(uuid, name, category, price);
+        products.add(product);
+        return product;
     }
 
-    public void updateProductPrice(UUID uuid, BigDecimal newPrice) {
-        Products product = products.get(uuid);
-        if (product == null) {
-            throw new IllegalArgumentException("Product does not exist");
-        }
-
-        Products updatedProduct = new Products(product.uuid(), product.name(), product.category(), newPrice);
-        products.put(uuid, updatedProduct);
-        changedProducts.add(updatedProduct);
+    // Get all products
+    public List<ProductRecord> getProducts() {
+        return Collections.unmodifiableList(products);
     }
 
+    // Check if warehouse is empty
     public boolean isEmpty() {
         return products.isEmpty();
     }
 
-    public List<Products> getProducts() {
-        return List.copyOf(products.values());
+    // Get a product by id
+    public Optional<ProductRecord> getProductById(UUID uuid) {
+        return products.stream().filter(p -> p.uuid().equals(uuid)).findFirst();
     }
 
-    public Optional<Products> getProductById(UUID uuid) {
-        return Optional.ofNullable(products.get(uuid));
+    // Update a product's price
+    public void updateProductPrice(UUID uuid, BigDecimal newPrice) {
+        ProductRecord product = getProductById(uuid).orElseThrow(() ->
+                new IllegalArgumentException("Product with that id doesn't exist."));
+        products.removeIf(p -> p.uuid().equals(uuid)); // Remove the old product
+        ProductRecord updatedProduct = new ProductRecord(uuid, product.name(), product.category(), newPrice);
+        products.add(updatedProduct); // Add the updated product
+        changedProducts.add(updatedProduct);
     }
 
-    public Set<Products> getChangedProducts() {
-        return Collections.unmodifiableSet(changedProducts);
+    // Get changed products
+    public List<ProductRecord> getChangedProducts() {
+        return Collections.unmodifiableList(changedProducts);
     }
 
-    public Map<Category, List<Products>> getProductsGroupedByCategories() {
-        Map<Category, List<Products>> groupedByCategory = new HashMap<>();
-        for (Products product : products.values()) {
-            groupedByCategory.computeIfAbsent(product.category(), k -> new ArrayList<>()).add(product);
-        }
-        return groupedByCategory;
+    // Get products by category
+    public List<ProductRecord> getProductsBy(Category category) {
+        return products.stream()
+                .filter(p -> p.category().equals(category))
+                .collect(Collectors.toList());
+    }
+
+    // Get products grouped by category
+    public Map<Category, List<ProductRecord>> getProductsGroupedByCategories() {
+        return products.stream()
+                .collect(Collectors.groupingBy(ProductRecord::category));
     }
 }
