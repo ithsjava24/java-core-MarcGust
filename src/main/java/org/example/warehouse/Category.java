@@ -1,5 +1,6 @@
 package org.example.warehouse;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,12 +17,20 @@ public class Category {
             throw new IllegalArgumentException("Category name can't be null");
         }
 
-        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-        return categories.computeIfAbsent(name, Category::new);
+        String formattedName = capitalize(name);
+        return categories.computeIfAbsent(formattedName, Category::new);
+    }
+
+    private static String capitalize(String name) {
+        return name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
     public String getName() {
         return name;
+    }
+
+    public static Map<String, Category> getCategories() {
+        return Collections.unmodifiableMap(categories);
     }
 
     @Override
