@@ -7,17 +7,15 @@ public class Category {
     private static final Map<String, Category> categories = new HashMap<>();
     private final String name;
 
-    // Private constructor
     private Category(String name) {
         this.name = name;
     }
 
-    // Factory method for creating or getting a Category
     public static Category of(String name) {
         if (name == null) {
             throw new IllegalArgumentException("Category name can't be null");
         }
-        // Ensure first letter is uppercase
+
         name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
         return categories.computeIfAbsent(name, Category::new);
     }
