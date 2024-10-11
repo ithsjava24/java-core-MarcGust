@@ -1,32 +1,17 @@
 package org.example.warehouse;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.UUID;
 
-public record ProductRecord(UUID uuid, String name, Category category, BigDecimal price) {
-    public ProductRecord {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Product name can't be null or empty.");
-        }
-        if (category == null) {
-            throw new IllegalArgumentException("Category can't be null.");
-        }
+public record ProductRecord(UUID id, String name, Category category, BigDecimal price) {
 
-        price = (price != null) ? price : BigDecimal.ZERO;
-        uuid = (uuid != null) ? uuid : UUID.randomUUID();
+    // En metod för att hämta UUID
+    public UUID uuid() {
+        return id; // Returnerar id som UUID
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductRecord that = (ProductRecord) o;
-        return uuid.equals(that.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(uuid);
+    // En metod för att uppdatera priset
+    public ProductRecord withPrice(BigDecimal newPrice) {
+        return new ProductRecord(this.id, this.name, this.category, newPrice);
     }
 }
