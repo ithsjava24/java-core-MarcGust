@@ -68,4 +68,9 @@ public class Warehouse {
                 .filter(p -> p.category().equals(category))
                 .collect(Collectors.toList());
     }
+
+    public Map<Category, List<ProductRecord>> getProductsGroupedByCategories() {
+        return products.stream()
+                .collect(Collectors.groupingBy(ProductRecord::category));
+    }
 }
