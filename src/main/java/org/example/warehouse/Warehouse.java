@@ -10,17 +10,14 @@ public class Warehouse {
     private final List<ProductRecord> products = new ArrayList<>();
     private final List<ProductRecord> changedProducts = new ArrayList<>();
 
-    // Private constructor
     private Warehouse(String name) {
         this.name = name;
     }
 
-    // Factory method for getting an instance
     public static Warehouse getInstance(String name) {
         return instances.computeIfAbsent(name, Warehouse::new);
     }
 
-    // Adding a product
     public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("Product name can't be null or empty.");
@@ -31,7 +28,7 @@ public class Warehouse {
         if (uuid == null) {
             uuid = UUID.randomUUID();
         }
-        // Check if product with the same id already exists
+
         UUID finalUuid = uuid;
         if (products.stream().anyMatch(p -> p.uuid().equals(finalUuid))) {
             throw new IllegalArgumentException("Product with that id already exists, use updateProduct for updates.");
@@ -41,46 +38,34 @@ public class Warehouse {
         return product;
     }
 
-    // Get all products
     public List<ProductRecord> getProducts() {
         return Collections.unmodifiableList(products);
     }
 
-    // Check if warehouse is empty
     public boolean isEmpty() {
         return products.isEmpty();
     }
 
-    // Get a product by id
     public Optional<ProductRecord> getProductById(UUID uuid) {
         return products.stream().filter(p -> p.uuid().equals(uuid)).findFirst();
     }
 
-    // Update a product's price
     public void updateProductPrice(UUID uuid, BigDecimal newPrice) {
         ProductRecord product = getProductById(uuid).orElseThrow(() ->
                 new IllegalArgumentException("Product with that id doesn't exist."));
-        products.removeIf(p -> p.uuid().equals(uuid)); // Remove the old product
+        products.removeIf(p -> p.uuid().equals(uuid));
         ProductRecord updatedProduct = new ProductRecord(uuid, product.name(), product.category(), newPrice);
-        products.add(updatedProduct); // Add the updated product
+        products.add(updatedProduct);
         changedProducts.add(updatedProduct);
     }
 
-    // Get changed products
     public List<ProductRecord> getChangedProducts() {
         return Collections.unmodifiableList(changedProducts);
     }
 
-    // Get products by category
     public List<ProductRecord> getProductsBy(Category category) {
         return products.stream()
                 .filter(p -> p.category().equals(category))
                 .collect(Collectors.toList());
-    }
-
-    // Get products grouped by category
-    public Map<Category, List<ProductRecord>> getProductsGroupedByCategories() {
-        return products.stream()
-                .collect(Collectors.groupingBy(ProductRecord::category));
     }
 }
