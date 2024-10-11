@@ -4,21 +4,25 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class Warehouse {
+    private final String name;
     private final Map<UUID, ProductRecord> products = new HashMap<>();
     private final List<ProductRecord> changedProducts = new ArrayList<>();
 
-    // Singleton-instans
     private static Warehouse instance;
 
-    private Warehouse() {
-        // Privat konstruktor för att förhindra instansiering
+    private Warehouse(String name) {
+        this.name = name;
     }
 
     public static Warehouse getInstance(String name) {
         if (instance == null) {
-            instance = new Warehouse();
+            instance = new Warehouse(name);
         }
         return instance;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public ProductRecord addProduct(UUID id, String name, Category category, BigDecimal price) {
@@ -33,7 +37,6 @@ public class Warehouse {
             id = UUID.randomUUID();
         }
 
-        // Om priset är null, sätt det till 0
         if (price == null) {
             price = BigDecimal.ZERO;
         }
