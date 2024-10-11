@@ -7,8 +7,8 @@ import static org.example.warehouse.Category.instances;
 
 public class Warehouse {
     private final String name;
-    private final Map<UUID, ProductRecord> products = new HashMap<>();
-    private final Set<ProductRecord> changedProducts = new HashSet<>();
+    private final Map<UUID, Products> products = new HashMap<>();
+    private final Set<Products> changedProducts = new HashSet<>();
 
     public Warehouse(String name) {
         this.name = name;
@@ -18,7 +18,7 @@ public class Warehouse {
         return instances.computeIfAbsent(name, Warehouse::new);
     }
 
-    public ProductRecord addProduct(UUID uuid, String name, Category category, BigDecimal price) {
+    public Products addProduct(UUID uuid, String name, Category category, BigDecimal price) {
         if (uuid == null) {
             uuid = UUID.randomUUID();
         }
@@ -35,18 +35,18 @@ public class Warehouse {
             throw new IllegalArgumentException("Product already exists");
         }
 
-        ProductRecord newProduct = new ProductRecord(uuid, name, category, price);
+        Products newProduct = new Products(uuid, name, category, price);
         products.put(uuid, newProduct);
         return newProduct;
     }
 
     public void updateProductPrice(UUID uuid, BigDecimal newPrice) {
-        ProductRecord product = products.get(uuid);
+        Products product = products.get(uuid);
         if (product == null) {
             throw new IllegalArgumentException("Product does not exist");
         }
 
-        ProductRecord updatedProduct = new ProductRecord(product.uuid(), product.name(), product.category(), newPrice);
+        Products updatedProduct = new Products(product.uuid(), product.name(), product.category(), newPrice);
         products.put(uuid, updatedProduct);
         changedProducts.add(updatedProduct);
     }
@@ -55,19 +55,23 @@ public class Warehouse {
         return products.isEmpty();
     }
 
-    public List<ProductRecord> getProducts() {
+    public List<Products> getProducts() {
         return List.copyOf(products.values());
     }
 
-    public Optional<ProductRecord> getProductById(UUID uuid) {
+    public Optional<Products> getProductById(UUID uuid) {
         return Optional.ofNullable(products.get(uuid));
     }
 
-    public Set<ProductRecord> getChangedProducts() {
+    public Set<Products> getChangedProducts() {
         return Collections.unmodifiableSet(changedProducts);
     }
 
-    public boolean getProductsGroupedByCategories() {
-        return false;
+    public Map<Category, List<Products>> getProductsGroupedByCategories() {
+        Map<Category, List<Products>> groupedByCategory = new HashMap<>();
+        for (Products product : products.values()) {
+            groupedByCategory.computeIfAbsent(product.category(), k -> new ArrayList<>()).add(product);
+        }
+        return groupedByCategory;
     }
 }
