@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class Warehouse {
 
-    private static final Map<String, Warehouse> warehouses = new HashMap<>();
-    private final List<ProductRecord> products = new ArrayList<>();
-    private final List<ProductRecord> changedProducts = new ArrayList<>();
+    private static Map<String, Warehouse> warehouses = new HashMap<>();
+    private List<ProductRecord> products = new ArrayList<>();
+    private List<ProductRecord> changedProducts = new ArrayList<>();
     private String name;
 
     private Warehouse(){}

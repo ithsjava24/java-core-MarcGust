@@ -5,8 +5,8 @@ import java.util.Map;
 
 public class Category {
 
-    private static final Map<String, Category> categories = new HashMap<>();
-    private final String name;
+    private static Map<String, Category> categories = new HashMap<>();
+    private String name;
 
     private Category(String name) {
         this.name = name;
