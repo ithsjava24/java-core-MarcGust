@@ -14,7 +14,6 @@ public class Category {
 
     public static Category of(String name) throws IllegalArgumentException {
 
-        // Check if name is null
         if (name == null)
             throw new IllegalArgumentException("Category name can't be null");
 
@@ -31,15 +30,15 @@ public class Category {
         return name;
     }
 
-    private static String capitalize(String str) {
+    private static String capitalize(String string) {
 
-        if (str.isEmpty())
-            return str;
+        if (string.isEmpty())
+            return string;
 
-        if (str.length() == 1)
-            return str.toUpperCase();
+        if (string.length() == 1)
+            return string.toUpperCase();
 
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 
     public String name() {

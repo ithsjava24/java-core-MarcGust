@@ -93,15 +93,15 @@ public class Warehouse {
         return getProductsGroupedByCategories().getOrDefault(category, List.of());
     }
 
-    private static String capitalize(String str) {
+    private static String capitalize(String string) {
 
-        if (str.isEmpty())
-            return str;
+        if (string.isEmpty())
+            return string;
 
-        if (str.length() == 1)
-            return str.toUpperCase();
+        if (string.length() == 1)
+            return string.toUpperCase();
 
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
     }
 
     public boolean isEmpty() {
