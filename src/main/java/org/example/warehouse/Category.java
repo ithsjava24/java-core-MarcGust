@@ -2,50 +2,47 @@ package org.example.warehouse;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Category {
-    private final String name;
 
-    private static final Map<String, Category> CACHE = new HashMap<>();
+    private static final Map<String, Category> categories = new HashMap<>();
+    private final String name;
 
     private Category(String name) {
         this.name = name;
     }
 
-    public static Category of(String name) {
-        if (name == null) {
+    public static Category of(String name) throws IllegalArgumentException {
+
+        // Check if name is null
+        if (name == null)
             throw new IllegalArgumentException("Category name can't be null");
-        }
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Category name can't be empty.");
+
+        name = capitalize(name);
+
+        if (!categories.containsKey(name)) {
+            categories.put(name, new Category(name));
         }
 
-        String capitalized = capitalizeFirstLetter(name);
-        return CACHE.computeIfAbsent(capitalized, Category::new);
+        return categories.get(name);
     }
 
-    public String name() {
+    public String getName(){
         return name;
     }
 
-    private static String capitalizeFirstLetter(String name) {
-        if (name == null || name.isEmpty()) {
-            return name;
-        }
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
+    private static String capitalize(String str) {
+
+        if (str.isEmpty())
+            return str;
+
+        if (str.length() == 1)
+            return str.toUpperCase();
+
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Category)) return false;
-        Category category = (Category) o;
-        return Objects.equals(name, category.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
+    public String name() {
+        return "";
     }
 }

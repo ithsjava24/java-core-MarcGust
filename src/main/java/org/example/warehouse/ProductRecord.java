@@ -3,13 +3,20 @@
     import java.math.BigDecimal;
     import java.util.UUID;
 
-    public record ProductRecord(UUID id, String name, Category category, BigDecimal price) {
+    public record ProductRecord(UUID uuid, String product, Category category, BigDecimal price) {
 
-        public UUID uuid() {
-            return id; // Returnerar id som UUID
-        }
+        public ProductRecord {
 
-        public ProductRecord withPrice(BigDecimal newPrice) {
-            return new ProductRecord(this.id, this.name, this.category, newPrice);
+            if ( product == null || product.isEmpty() )
+                throw new IllegalArgumentException("Product name can't be null or empty.");
+
+            if ( category == null )
+                throw new IllegalArgumentException("Category can't be null.");
+
+            if ( uuid == null )
+                uuid = UUID.randomUUID();
+
+            if ( price == null )
+                price = BigDecimal.ZERO;
         }
     }
